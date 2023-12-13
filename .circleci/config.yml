@@ -37,6 +37,23 @@ jobs:
           name: "Backend type-check"
           working_directory: "backend/"
           command: "npm run type-check"
+  backend-unit-tests:
+    docker:
+      - image: cimg/node:lts 
+    steps:
+      - checkout
+      - run:
+          name: "Install node modules"
+          command: "npm install"
+      - run:
+          name: "Backend db-install"
+          working_directory: "backend/"
+          command: "npm run db-install"
+      - run:
+          name: "Backend unit-tests"
+          working_directory: "backend/"
+          command: "npm run unit-tests"
+
 
 
 # Orchestrate jobs using workflows
@@ -46,3 +63,4 @@ workflows:
     jobs:
       - backend-lint
       - backend-type-check
+      - backend-unit-tests
