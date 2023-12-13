@@ -27,6 +27,9 @@ const typedRouter = new TypedRouter()
                     if (typeof password !== 'string') throw new Error('')
 
                     // Vérifier si l'utilisateur existe déjà
+                    if (password.length < 8) {
+                        return error(400, 'Too short password')
+                    }
                     const userWithSameEmail = await prisma.user.findFirst({ where: { email } })
 
                     if (userWithSameEmail) {
