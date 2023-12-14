@@ -194,6 +194,8 @@ Edit the `.circleci/config.yml` to replace the `say-hello` job by a `backend-lin
 
 Do not hesitate to see the CircleCI documentation pages referenced into the file.
 
+Use the `cimg/node:lts` Docker image.
+
 In the `jobs` main section, rename the `say-hello` section by `backend-lint`. 
 
 Before the `run` section, add another run section to install node_modules via `npm install`.
@@ -203,7 +205,7 @@ Into the second `run` section :
 - Change the command property with `npm run lint-check`
 - Add a `working_directory` property to run the script into the `backend/` directory
 
-Update the `workspaces` main section to use the `backend-lint` job instead of `say-hello`.
+Update the `workflows` main section to use the `backend-lint` job instead of `say-hello`.
 
 Enjoy to rename the `say-hello-workflow` as `backend-ci-workflow`.
 
@@ -257,7 +259,7 @@ Git fetch and switch to a new branch named `chore/add-backend-type-check` from t
 Edit the `.circleci/config.yml`
 
 Add a new job `backend-type-check` in the `jobs` and `workflows.backend-ci-workflow.jobs` sections :
-- Using the `node:lts` docker image
+- Using the `cimg/node:lts` docker image
 - Running `npm install` 
 - Then running `npm run db-install` in `backend/` directory
 - Then running `npm run type-check` in `backend/` directory
@@ -346,7 +348,7 @@ Check you can well run unit tests via `npm run unit-tests`
 Then, let's continue with CI configuration. Edit the `.circleci/config.yml`
 
 Add a new job `backend-unit-tests` in the `jobs` and `workflows.backend-ci-workflow.jobs` sections :
-- Using the `node:lts` docker image
+- Using the `cimg/node:lts` docker image
 - Running `npm install` 
 - Then running `npm run db-install` in `backend/` directory
 - Then running `npm run unit-tests` in `backend/` directory
@@ -473,13 +475,13 @@ Create a `.releaserc` file on project root
 }
 ```
 
-Add a `release` job to the CD workflow that will be executed after the `build` one (check the CircleCI documentation to know how to execute jobs sequentially) that will invoke the `semantic-release` script from the root `package.json`. 
+Add a `release` job to the CD workflow that will invoke the `semantic-release` script from the root `package.json`. 
 
 Using `semantic-release`, you will need to define a `GITHUB_TOKEN` environment variable containing a GitHub personal access token to make it able to add release to your repo.
 
 More details here https://github.com/semantic-release/github#readme/blob/master/README.md#github-authentication
 
-Generate a GitHub personal access token https://github.com/settings/tokens with `repo` scope.
+Generate a *Classic* GitHub personal access token https://github.com/settings/tokens with `repo` scope.
 
 Define an environment variable into your CircleCI project https://app.circleci.com  Projects > Your project > Project settings > Environment Variables > Add Environment Variable > `GITHUB_TOKEN` with the value of the generated token
 
@@ -540,7 +542,7 @@ Basically, here is the process to deploy :
 
 On IBM Cloud instance, we can use SSH to transfer files and execute remote command. For educational purpose, we will use here a classic username/password authentication, but keep in mind that SSH key pair is a better approach (EDITOR'S NOTE : for security reason I cannot give you an access to the IBM Cloud dashboard allowing to defining SSH key pair). 
 
-Username/password SSH authentifcation an be done thanks to `sshpass`command. In `node:lts` Docker image, it appears that `sshpass` is not installed, you can install it via aptitude into job step :
+Username/password SSH authentifcation an be done thanks to `sshpass`command. In `cimg/node:lts` Docker image, it appears that `sshpass` is not installed, you can install it via aptitude into job step :
 
 ```yaml
 - run: sudo apt-get update && sudo apt-get install -y sshpass
